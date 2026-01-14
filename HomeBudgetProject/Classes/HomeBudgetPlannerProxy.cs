@@ -10,56 +10,79 @@ namespace HomeBudgetProject.Classes
 {
     internal class HomeBudgetPlannerProxy : IHomeBudgetPlanner
     {
-        private HomeBudgetPlanner service;
+        private HomeBudgetPlanner _realService;
         private User user;
 
-        public HomeBudgetPlannerProxy(User user)
+        public HomeBudgetPlannerProxy(User user, HomeBudgetPlanner service)
         {
             this.user = user;
-            service = new HomeBudgetPlanner();
+            _realService = service;
         }
-        private bool HasPermission()
-        {
-            if (user.Status == StatusLevel.Guest)
-            {
-                Console.WriteLine("Brak uprawnień");
-                return false;
-            }
-            return true; // Narazie podstawowe sprawdzenie
-        }
+
         public void AddExpense(Expense item)
         {
-            throw new NotImplementedException();
+            _realService.AddExpense(item);
         }
 
         public void AddIncome(Income item)
         {
-            throw new NotImplementedException();
+            _realService.AddIncome(item);
         }
 
         public void Attach(IBudgetObserver observer)
         {
-            throw new NotImplementedException();
+            _realService.Attach(observer);
         }
 
         public void Detach(IBudgetObserver observer)
         {
-            throw new NotImplementedException();
+            _realService.Detach(observer);
         }
 
         public void GenerateRaport()
         {
-            throw new NotImplementedException();
+            if (!HasPermission(nameof(GenerateRaport)))
+            {
+                Console.WriteLine("X");
+                return;
+            }
+            _realService.GenerateRaport();
+       
         }
 
         public void Notify()
         {
-            throw new NotImplementedException();
+            _realService.Notify();
         }
 
         public void SetStrategy(IRaportStrategy strategy)
         {
-            throw new NotImplementedException();
+            if (!HasPermission(nameof(SetStrategy)))
+            {
+                Console.WriteLine("X");
+                return;
+            }
+            _realService.SetStrategy(strategy);
+        }
+
+        private bool HasPermission(string methodName)
+        {
+            switch (methodName)
+            {
+                case "GenerateRaport":
+                    if (user.Status < StatusLevel.NormalUser)
+                    {
+                        return false;
+                    }
+                    break;
+                case "SetStrategy":
+                    if (user.Status < StatusLevel.VIP)
+                    {
+                        return false;
+                    }
+                    break;
+            }
+            return true;
         }
     }
 }

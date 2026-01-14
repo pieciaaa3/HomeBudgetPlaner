@@ -9,12 +9,7 @@ namespace HomeBudgetProject.Classes
 {
     public class Expense : BudgetItem
     {
-        public Expense(string name, float value, CategoryType category)
-        {
-            this.Name = name;
-            this.Value = value;
-            this.Category = category;
-        }
+        public Expense(string name, float value): base(name, value) {}
         public override float GetValue()
         {
             return Value;

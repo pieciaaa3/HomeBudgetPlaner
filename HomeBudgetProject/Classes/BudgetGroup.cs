@@ -10,11 +10,11 @@ namespace HomeBudgetProject.Classes
     public class BudgetGroup : BudgetItem
     {
         public List<BudgetItem> budgetItemList = new List<BudgetItem>();
+        string Category;
 
-        public BudgetGroup(CategoryType category) {
-            this.Category = category;
-            this.Name = category.ToString();
-            this.Value = 0;
+        public BudgetGroup(string name, string category): base(name, 0)
+        {
+            Category = category;
         }
 
         public void Add(BudgetItem item)
@@ -35,5 +35,18 @@ namespace HomeBudgetProject.Classes
             }
             return total;
         }
+
+        public override string ToString()
+        {
+            string result = $"{Name}: {Category}\n";
+            foreach (BudgetItem item in budgetItemList)
+            {
+                result += $"\t{item}\n";
+            }
+            result += $"{Value}";
+            return result;
+        }
+
+
     }
 }
