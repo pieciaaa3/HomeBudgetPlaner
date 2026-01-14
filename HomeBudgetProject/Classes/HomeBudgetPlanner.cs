@@ -24,6 +24,12 @@ namespace HomeBudgetProject.Classes
             Notify();
         }
 
+        public void AddGroup(BudgetGroup group)
+        {
+            budgetItemsList.Add(group);
+            Notify();
+        }
+
         public void Attach(IBudgetObserver observer)
         {
             if (!observers.Contains(observer))

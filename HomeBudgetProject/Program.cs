@@ -10,70 +10,32 @@ namespace HomeBudgetProject
     {
         static void Main(string[] args)
         {
-            string name, password;
-            StatusLevel level;
-            int userStatusLevel;
-
-            Console.WriteLine("Home budget planer");
-
             Display display = new Display();
-            display.ShowLoginScreen();
-            Console.WriteLine("Podaj nick/imie:");
-            name = Console.ReadLine();
-            Console.WriteLine("Podaj hasło: ");
-            password = Console.ReadLine();
-            Console.WriteLine("podaj typ użytkownika: (1 - Gość, 2 - Zwykły użytkownik, 3 - VIP, 4 -admin)");
-            userStatusLevel = Int32.Parse(Console.ReadLine());
-            switch (userStatusLevel)
-            {
-                case 1:
-                    level = StatusLevel.Guest;
-                    break;
-                case 2:
-                    level = StatusLevel.NormalUser;
-                    break;
-                case 3:
-                    level = StatusLevel.VIP;
-                    break;
-                case 4:
-                    level = StatusLevel.Admin;
-                    break;
-                default:
-                    level = StatusLevel.NormalUser;
-                    break;
-            }
+            User guest = new User("guest", "guest", StatusLevel.Guest);
 
-            User currentUser = new User(name, password, level);
-
-            Console.WriteLine($"Obecnie zalogowany użytkownik: {name} o statusie {level}");
-            Console.WriteLine("Naciśnij ENTER, aby wejść do systemu...");
-            Console.ReadLine();
-            Console.Clear();
-
-            HomeBudgetPlannerProxy proxy = new HomeBudgetPlannerProxy(currentUser);
             HomeBudgetPlanner planner = new HomeBudgetPlanner();
+            HomeBudgetPlannerProxy plannerProxy = new HomeBudgetPlannerProxy(guest, planner);
 
-            Console.WriteLine("Wybierz format raportu: 1 - PDF, 2 - CSV");
-            string choice = Console.ReadLine();
-
-            if (choice == "1")
-            {
-                planner.SetStrategy(new PDFRaportStrategy());
-            }
-            else
-            {
-                planner.SetStrategy(new CSVRaportStrategy());
-            }
+            
+            plannerProxy.AddExpense(new Expense("Wengiel", 300));
+            display.ShowPlan(planner);
 
 
-            planner.GenerateRaport();
-            Console.ReadLine();
-            Console.Clear();
+            BudgetGroup group = new BudgetGroup("Damian", "Rozrywka");
+            BudgetGroup group2 = new BudgetGroup("1.", " Piwko");
+            group.Add(new Expense("Wyjście z dziewczyną", 75));
+            group2.Add(new Expense("Piwo z chłopakami", 50));
+            group2.Add(new Expense("Drugie piwo z chłopakami", 70));
+            group.Add(group2);
+            planner.AddGroup(group);
 
-            display.ShowMenu();
+            display.ShowPlan(planner);
 
-            Console.WriteLine("\nKoniec testu. Naciśnij klawisz.");
-            Console.ReadKey();
+
+
+
+
+            
         }
     }
 }
