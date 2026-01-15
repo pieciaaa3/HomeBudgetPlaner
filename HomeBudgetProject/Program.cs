@@ -42,8 +42,8 @@ User twujStary = new User("twujStary", "haslo123", StatusLevel.NormalUser);
             planerTwojegoStarego.SetStrategy(new CSVRaportStrategy());
             planerTwojegoStarego.GenerateRaport();
 
-           // planerTwojegoStarego.SetStrategy(new PDFRaportStrategy());
-           // planerTwojegoStarego.GenerateRaport();
+           planerTwojegoStarego.SetStrategy(new PDFRaportStrategy());
+           planerTwojegoStarego.GenerateRaport();
 
 
 
